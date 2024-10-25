@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
   
-  contract abstract Dbank{
+  contract  Dbank{
 
     address public immutable owner;
+    bool private locked;
     constructor(){
       owner=msg.sender;
     } 
@@ -21,26 +22,47 @@ pragma solidity ^0.8.0;
       require(msg.sender==owner,"Not the Owner");
       _;
     }
-    receive() virtual external payable;
+    modifier  noReentrant(){
+    require(!locked,"reentrancy detected");
+    locked=true;
+       _;
+    locked=false;
+}
     //events
       event DepositMade(address indexed user, uint256 amnount);
       event MoneyWithdrawn(address indexed user,uint amount);
       event FundsTransfered(address indexed from, address indexed to, uint amount);
 
+    receive() external payable{
+      emit DepositMade(msg.sender, msg.value);
+      }    
+     fallback() external payable{
+      emit DepositMade(msg.sender, msg.value);
+      }
+      
+
+    
     function  DepositMoney(string memory _name) public payable {
       require(msg.value>=MIN_DEPOSIT,"must deposit some balance");
       balances[msg.sender]+= msg.value;
-      deposits[msg.sender] = Deposit(balance,_name,block.timestamp);
+      deposits[msg.sender] = Deposit(msg.value, _name,block.timestamp);
     }
 
-    function withdraw(uint amount) external{
+    function withdraw(uint amount) external noReentrant(){
       require(balances[msg.sender]>=amount,"insuficient amount");
       payable(msg.sender).transfer(amount);
       balances[msg.sender]-=amount;
+        emit  MoneyWithdrawn(msg.sender,amount);
+
     }
 
     function Transfer(uint amount,address _to) public payable{
-      require(balances[msg.sender]>=amount,"insufficient amount");
+      require(balances[msg.sender]>=amount,"insufficient amount");      
+      payable(_to).transfer(amount);
+      balances[msg.sender]-=amount;
+      balances[_to]+=amount;
+      emit FundsTransfered( msg.sender,_to,amount);
+
     }
 
 
