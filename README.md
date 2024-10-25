@@ -1,6 +1,3 @@
-Here's a sample `README.md` file for your Dbank smart contract project:
-
-````markdown
 # Dbank - A Decentralized Banking Smart Contract
 
 ## Overview
@@ -44,6 +41,7 @@ Dbank is a decentralized banking smart contract built on the Ethereum blockchain
    git clone https://github.com/yourusername/dbank.git
    cd dbank
    ```
+
 ````
 
 2. Install dependencies (if using Hardhat):
@@ -101,3 +99,4 @@ This project is licensed under the MIT License.
 
 Let me know if you need further modifications or additional information!
 ```
+````
