@@ -82,23 +82,3 @@ To test the smart contract using Ganache, follow these steps:
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or fixes.
-
-## License
-
-This project is licensed under the MIT License.
-
-### Customization
-
-- Update the repository link with your actual GitHub repository.
-- Adjust the usage examples based on how you want users to interact with your contract.
-- Feel free to add more sections like a changelog or acknowledgments as needed.
-
-Let me know if you need further modifications or additional information!
-
-```
-
-```
-
-```
-
-```

@@ -51,6 +51,7 @@ pragma solidity ^0.8.27;
     function withdraw(uint amount) external noReentrant(){
       require(balances[msg.sender]>=amount,"insuficient amount");
       payable(msg.sender).transfer(amount);
+
       balances[msg.sender]-=amount;
         emit  MoneyWithdrawn(msg.sender,amount);
 
