@@ -11,3 +11,10 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+/*
+const Contract =await her.ehter.getContractFactory("Dbank");
+const dbank= await Dbank.deploy();
+await dbank.deployed();
+
+ */
