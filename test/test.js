@@ -12,47 +12,59 @@ describe("Dbank", function () {
   });
 
   it("should deposit money", async function () {
-    // addr1 deposits 1 ether
+    const depositAmount = ethers.utils.parseEther("1");
+    
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
-      value: ethers.utils.parseEther("1"),
+      value: depositAmount
     });
-    const balance = await dbank.balances(addr1.address);
-    expect(balance).to.equal(ethers.utils.parseEther("1"));
+
+    const balance = await dbank.connect(addr1).checkBalance();
+    expect(balance.toString()).to.equal(depositAmount.toString());
   });
 
   it("should withdraw money", async function () {
-    // Deposit money first
+    const depositAmount = ethers.utils.parseEther("1");
+    const withdrawAmount = ethers.utils.parseEther("0.5");
+    
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
-      value: ethers.utils.parseEther("1"),
+      value: depositAmount
     });
 
-    // Withdraw 0.5 ether
-    await dbank.connect(addr1).withdraw(ethers.utils.parseEther("0.5"));
-    const balance = await dbank.balances(addr1.address);
-    expect(balance).to.equal(ethers.utils.parseEther("0.5"));
+    await dbank.connect(addr1).withdraw(withdrawAmount);
+    
+    const balance = await dbank.connect(addr1).checkBalance();
+    expect(balance.toString()).to.equal(depositAmount.sub(withdrawAmount).toString());
   });
 
   it("should transfer and optimize gas", async function () {
-    // Deposit money for addr1 so it has balance to transfer
+    const depositAmount = ethers.utils.parseEther("1");
+    const transferAmount = ethers.utils.parseEther("0.5");
+    
+    // Deposit money for addr1
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
-      value: ethers.utils.parseEther("1"),
+      value: depositAmount
     });
 
-    // Transfer 0.5 ether from addr1 to addr2
-    const tx = await dbank.connect(addr1).Transfer(
-      ethers.utils.parseEther("0.5"),
-      addr2.address
-    );
+    // Get initial balances
+    const initialSenderBalance = await dbank.connect(addr1).checkBalance();
+    const initialReceiverBalance = await dbank.connect(addr2).checkBalance();
+
+    // Transfer
+    const tx = await dbank.connect(addr1).Transfer(transferAmount, addr2.address);
     const receipt = await tx.wait();
 
-    // Check gas usage (adjust threshold as needed)
+    // Check gas usage
     expect(receipt.gasUsed.toNumber()).to.be.below(100000);
 
-    // Check balances after transfer
-    const senderBalance = await dbank.balances(addr1.address);
-    const receiverBalance = await dbank.balances(addr2.address);
+    // Check final balances
+    const finalSenderBalance = await dbank.connect(addr1).checkBalance();
+    const finalReceiverBalance = await dbank.connect(addr2).checkBalance();
 
-    expect(senderBalance).to.equal(ethers.utils.parseEther("0.5"));
-    expect(receiverBalance).to.equal(ethers.utils.parseEther("0.5"));
+    expect(finalSenderBalance.toString()).to.equal(
+      initialSenderBalance.sub(transferAmount).toString()
+    );
+    expect(finalReceiverBalance.toString()).to.equal(
+      initialReceiverBalance.add(transferAmount).toString()
+    );
   });
 });
