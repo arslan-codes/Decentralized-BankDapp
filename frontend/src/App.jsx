@@ -1,19 +1,27 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-
+import Hero from "./pages/Hero";
+import { createPublicClient, http } from "viem";
+import { BrowserRouter, Routes } from "react-router-dom";
+import { mainnet } from "viem/chains";
+const client = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
 function App() {
+  const [Balance, setbalance] = useState("");
+  async function getbalance() {
+    const res = await client.getBalance({
+      address: "0x244a901b522818899bf702223f8841510B75713f",
+    });
+    setbalance(res.toString());
+    console.log(res);
+  }
+
   return (
-    <>
-      <h1>This is a Decentralized Bank</h1>
-      <h2>Deposit, withdraw and transfesdaour crypto funds</h2>
-      <div>
-        <label htmlFor=""> </label>
-        <input type="addm" name="" id="" /> <label htmlFor="">h1 </label>
-        <input type="addm" name="" id="" /> <label htmlFor=""> sddf</label>
-      </div>
-    </>
+    <BrowserRouter>
+      <Hero />
+    </BrowserRouter>
   );
 }
 
