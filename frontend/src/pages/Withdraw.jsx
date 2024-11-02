@@ -36,7 +36,22 @@ const Withdraw = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <button className="w-3/4  sm:w-full bg-pink-200 text-pink-600 font-semibold py-3 rounded-lg mt-4">
+              <button className="w-3/4 sm:w-full bg-pink-200 text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center inline-flex justify-center items-center focus:outline-none focus:ring-1 focus:ring-pink-600 f focus:ring-offset-2">
+                <svg
+                  className="w-4 h-4 me-2 -ms-1 text-[#626890]"
+                  aria-hidden="true"
+                  focusable="false"
+                  data-prefix="fab"
+                  data-icon="ethereum"
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 320 512"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"
+                  ></path>
+                </svg>{" "}
                 Withdraw
               </button>
             </div>
@@ -61,6 +76,7 @@ const Withdraw = () => {
                 <div>
                   {" "}
                   <p className="text-black">All Withdraws</p>
+                  <div class="w-full h-24 overflow-y-auto p-4 border text-black border-0  whitespace-normal"></div>
                 </div>
               </div>
             </div>

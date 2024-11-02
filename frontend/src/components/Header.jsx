@@ -89,7 +89,7 @@ const Header = () => {
             <p className="hidden sm:text-sm  sm:block">Withdraw </p>
           </RouterLink>
           <RouterLink
-            to="/contact"
+            to="/transfer"
             className="btn btn-ghost text-sm text-white md:text-lg"
           >
             {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
