@@ -73,15 +73,13 @@ const Withdraw = () => {
             </div>
 
             {/* Buy Section */}
-            <div className="flex justify-start items-center mb-4">
+            <div className="flex justify-start items-center mb-1">
               <div className="w-full">
-                <p className="text-gray-900 text-base sm:text-2xl font-semibold my-1 sm:my-2">
+                <p className="text-gray-900 text-base sm:text-xl font-semibold my-1 sm:my-2">
                   Previous Withdraws
                 </p>{" "}
                 <div>
-                  {" "}
-                  <p className="text-black">All Withdraws</p>
-                  <div class="w-full h-24 overflow-y-auto p-4  text-black border-0  whitespace-normal"></div>
+                  <div class="w-full h-24 overflow-y-auto p-4  text-black   whitespace-normal"></div>
                 </div>
               </div>
             </div>

@@ -31,16 +31,6 @@ const About = () => {
           />
         </div>
       </div>
-
-      <div className="text-center text-balance my-12">
-        <h1 className="text-5xl font-bold m-4 tracking-tight text-white">
-          Meet Our Team
-        </h1>
-        <p>
-          Get to know the people behind KavaSaki who work tirelessly to bring
-          you the best banking experience.
-        </p>
-      </div>
     </Layout>
   );
 };

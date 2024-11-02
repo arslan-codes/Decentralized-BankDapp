@@ -18,12 +18,6 @@ const Hero = () => {
             traditional assets in one secure platform.
           </p>
           <div className="mt-6 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-x-6">
-            {/* <a
-              href="#"
-              className="rounded-md bg-pink-600 px-2 sm:px-3.5  py-1.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-pink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 focus-cursor-mouse"
-            >
-              Connect Wallet
-            </a> */}
             <button
               type="button"
               class="text-gray-900  hover:bg-pink-900 bg-pink-100  
