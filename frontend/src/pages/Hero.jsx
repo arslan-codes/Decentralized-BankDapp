@@ -8,21 +8,9 @@ const Hero = () => {
   return (
     <Layout>
       <div className="mx-auto max-w-2xl py-28 sm:py-48 lg:py-30">
-        <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-          {/* <div className="relative rounded-full px-3 py-1 text-sm leading-6  text-white ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                Announcing our next round of funding.{" "}
-                <a
-                  href="#blog"
-                  className="font-semibold text-indigo-600"
-                  // onClick={handleReadMoreClick}
-                >
-                  <span className="absolute inset-0" aria-hidden="true"></span>
-                  Read more <span aria-hidden="true">&rarr;</span>
-                </a>
-              </div> */}
-        </div>
+        <div className="hidden sm:mb-8 sm:flex sm:justify-center"></div>
         <div className="text-center">
-          <h1 className="text-2xl sm: text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white md:text-6xl">
             Decentralized Bank
           </h1>
           <p className="text-sm md:text-lg mt-2  md:mt-6 leading-8 text-gray-100 whitespace-pre-wrap sm:whitespace-normal">
@@ -38,7 +26,11 @@ const Hero = () => {
             </a> */}
             <button
               type="button"
-              class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
+              class="text-gray-900 bg-white hover:bg-pink-700 border 
+               focus:ring-4 focus:outline-none focus:ring-gray-100 
+               font-semibold hover:text-white rounded-lg text-sm px-5 
+               py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600
+                dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
             >
               <svg
                 aria-hidden="true"
