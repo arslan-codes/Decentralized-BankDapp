@@ -7,5 +7,6 @@ export default {
   plugins: [
     // .prettierrc
     require("daisyui"),
+    // require("@tailwindcss/forms"),
   ],
 };

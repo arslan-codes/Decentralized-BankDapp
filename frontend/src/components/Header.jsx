@@ -31,10 +31,7 @@ const Header = () => {
             </svg>
             <p className="hidden sm:text-sm  sm:block">Home</p>
           </RouterLink>
-          <RouterLink
-            to="/getStarted"
-            className="btn btn-ghost text-l text-white"
-          >
+          <RouterLink to="/about" className="btn btn-ghost text-l text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -51,7 +48,7 @@ const Header = () => {
             </svg>
             <p className="hidden sm:text-sm  sm:block">About</p>
           </RouterLink>
-          <RouterLink to="/blog" className="btn btn-ghost text-l text-white">
+          <RouterLink to="/deposit" className="btn btn-ghost text-l text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -69,7 +66,7 @@ const Header = () => {
             <p className="hidden sm:text-sm sm:block">Deposit</p>
           </RouterLink>
           <RouterLink
-            to="/contact"
+            to="/withdraw"
             className="btn btn-ghost text-sm text-white md:text-lg"
           >
             <svg

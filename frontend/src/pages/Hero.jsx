@@ -1,7 +1,7 @@
 import React from "react";
 // import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import onchian from "../assets/on_chain1.png";
+
 const Hero = () => {
   // const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ const Hero = () => {
                   href="#"
                   className="rounded-md bg-pink-600 px-2 sm:px-3.5  py-1.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-pink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 focus-cursor-mouse"
                 >
-                  Get started
+                  Connect Wallet
                 </a>
                 {/* <a
                   href="#"
@@ -58,7 +58,6 @@ const Hero = () => {
                   Learn more <span aria-hidden="true">→</span>
                 </a> */}
               </div>
-              <div></div>
             </div>
           </div>
         </div>
