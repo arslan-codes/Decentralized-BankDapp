@@ -26,7 +26,7 @@ const Transfer = () => {
                 <input
                   type="text"
                   placeholder="0xjd3bdsk3b......"
-                  className="text-base  border-2 border-gray-200    rounded-2xl 
+                  className="text-base  border-2 border-gray-200    rounded-xl 
                   sm:text-2xl w-full form-control font-semibold text-gray-800  
                   py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
@@ -43,7 +43,7 @@ const Transfer = () => {
                 <input
                   type="text"
                   placeholder="0 Eth"
-                  className="text-base  border-2 border-gray-200    rounded-2xl 
+                  className="text-base  border-2 border-gray-200    rounded-xl 
                   sm:text-2xl w-full form-control font-semibold text-gray-800  
                   py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
@@ -51,7 +51,12 @@ const Transfer = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <button className="w-3/4 sm:w-full bg-pink-200 text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center inline-flex justify-center items-center focus:outline-none focus:ring-1 focus:ring-pink-600 f focus:ring-offset-2">
+              <button
+                className="w-3/4 sm:w-full bg-pink-200
+               text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
+                inline-flex justify-center items-center  hover:bg-pink-500 hover:text-white focus-visible:outline 
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
                 <svg
                   className="w-4 h-4 me-2 -ms-1 text-[#626890]"
                   aria-hidden="true"
@@ -90,8 +95,15 @@ const Transfer = () => {
                   Previous Transfers
                 </p>{" "}
                 <div>
-                  {" "}
-                  <p className="text-black">All Transfers</p>
+                  <div class="w-full h-48 overflow-y-auto border rounded-lg p-2">
+                    <ul class="space-y-2 text-black">
+                      {/* {transaction.map((tx) => (
+                        <li className="border-b pb-2" key={tx.id}>
+                          {tx.detail}
+                        </li>
+                      ))} */}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

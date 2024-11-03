@@ -95,8 +95,15 @@ const Deposit = () => {
                   Previous Deposits
                 </p>{" "}
                 <div>
-                  {" "}
-                  <p className="text-black">All Deposits</p>
+                  <div class="w-full h-48 overflow-y-auto border rounded-lg p-2">
+                    <ul class="space-y-2 text-black">
+                      {/* {transaction.map((tx) => (
+                        <li className="border-b pb-2" key={tx.id}>
+                          {tx.detail}
+                        </li>
+                      ))} */}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

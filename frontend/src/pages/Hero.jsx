@@ -13,6 +13,12 @@ const Hero = () => {
           <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white md:text-6xl">
             Decentralized Bank
           </h1>
+          {/* <div className="flex flex-end">
+            <img
+              src="https://img.freepik.com/premium-vector/blockchain-engineer-isolated-cartoon-vector-illustrations_107173-30333.jpg"
+              alt=""
+            />
+          </div> */}
           <p className="text-sm md:text-lg mt-2  md:mt-6 leading-8 text-gray-100 whitespace-pre-wrap sm:whitespace-normal">
             The future of finance is here. Manage your cryptocurrencies and
             traditional assets in one secure platform.
