@@ -26,7 +26,7 @@ const Deposit = () => {
                 <input
                   type="text"
                   placeholder="Name"
-                  className="text-base  border-2 border-gray-200    rounded-2xl 
+                  className="text-base  border-2 border-gray-200    rounded-xl 
                   sm:text-2xl w-full form-control font-semibold text-gray-800  
                   py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
@@ -43,7 +43,7 @@ const Deposit = () => {
                 <input
                   type="text"
                   placeholder="0 Eth"
-                  className="text-base  border-2 border-gray-200    rounded-2xl 
+                  className="text-base  border-2 border-gray-200    rounded-xl 
                   sm:text-2xl w-full form-control font-semibold text-gray-800  
                   py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
@@ -89,7 +89,7 @@ const Deposit = () => {
             </div>
 
             {/* Buy Section */}
-            <div className="flex justify-start items-center mb-4">
+            <div className="flex justify-start items-center mb-4 ">
               <div className="w-full">
                 <p className="text-gray-900 text-base sm:text-2xl font-semibold my-1 sm:my-2">
                   Previous Deposits

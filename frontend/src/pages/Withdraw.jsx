@@ -28,7 +28,7 @@ const Withdraw = () => {
                 <input
                   type="text"
                   placeholder="0 Eth"
-                  className="text-base  border-2 border-gray-200    rounded-2xl 
+                  className="text-base  border-2 border-gray-200    rounded-xl 
                   sm:text-2xl w-full form-control font-semibold text-gray-800  
                   py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
