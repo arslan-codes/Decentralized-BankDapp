@@ -13,9 +13,9 @@ describe("Dbank", function () {
 
   it("should deposit money", async function () {
     const depositAmount = ethers.utils.parseEther("1");
-    
+
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
-      value: depositAmount
+      value: depositAmount,
     });
 
     const balance = await dbank.connect(addr1).checkBalance();
@@ -25,24 +25,26 @@ describe("Dbank", function () {
   it("should withdraw money", async function () {
     const depositAmount = ethers.utils.parseEther("1");
     const withdrawAmount = ethers.utils.parseEther("0.5");
-    
+
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
-      value: depositAmount
+      value: depositAmount,
     });
 
     await dbank.connect(addr1).withdraw(withdrawAmount);
-    
+
     const balance = await dbank.connect(addr1).checkBalance();
-    expect(balance.toString()).to.equal(depositAmount.sub(withdrawAmount).toString());
+    expect(balance.toString()).to.equal(
+      depositAmount.sub(withdrawAmount).toString()
+    );
   });
 
   it("should transfer and optimize gas", async function () {
     const depositAmount = ethers.utils.parseEther("1");
     const transferAmount = ethers.utils.parseEther("0.5");
-    
+
     // Deposit money for addr1
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
-      value: depositAmount
+      value: depositAmount,
     });
 
     // Get initial balances
@@ -50,7 +52,9 @@ describe("Dbank", function () {
     const initialReceiverBalance = await dbank.connect(addr2).checkBalance();
 
     // Transfer
-    const tx = await dbank.connect(addr1).Transfer(transferAmount, addr2.address);
+    const tx = await dbank
+      .connect(addr1)
+      .Transfer(transferAmount, addr2.address);
     const receipt = await tx.wait();
 
     // Check gas usage
@@ -68,3 +72,24 @@ describe("Dbank", function () {
     );
   });
 });
+
+/**
+ describe("Dbank",function(){
+
+ beforEach(async function(){
+  const Dbank= await ethers.getContractFactory("dbank");
+  const dbank=Dbank.deploy();
+  await dbank.deployed();
+ })
+ it"shopuld deposit money,async()=>{
+ const depositMoney= ethers.utilis.pasrseEther("1");
+  await dbank.connect(dadd1).DepositMoney("test deo",{
+  value:depositMoney})
+  const balance= await dbank.connect(addr1).checkBalance();
+  expect (balance.toString()).to.equal(depositMoney.toString());
+  })
+ 
+ })
+ 
+
+ *  */

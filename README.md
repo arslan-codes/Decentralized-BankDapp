@@ -37,10 +37,12 @@ Dbank is a decentralized banking smart contract built on the Ethereum blockchain
 ## Installation
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/yourusername/dbank.git
-   cd dbank
+   git clone https://github.com/arslan-codes/Decentralized-BankDapp.git
+
    ```
+
 2. Install dependencies (if using Hardhat):
    ```bash
    npm install
@@ -53,7 +55,7 @@ To test the smart contract using Ganache, follow these steps:
 1. Start Ganache and create a new workspace.
 2. Deploy the smart contract using Hardhat:
    ```bash
-   npx hardhat run scripts/deploy.js --network ganache
+   npx hardhat run scripts/deploy.js --network sepolia
    ```
 3. Run the tests:
    ```bash

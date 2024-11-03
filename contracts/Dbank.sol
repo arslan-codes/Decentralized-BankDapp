@@ -11,7 +11,7 @@ contract Dbank {
 
     struct Deposit {
         uint256 amount;
-        string name;
+        string   name;
         uint256 depositTime;
     }
 

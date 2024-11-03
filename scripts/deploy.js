@@ -16,6 +16,4 @@ main().catch((error) => {
 const Contract =await her.ehter.getContractFactory("Dbank");
 const dbank= await Dbank.deploy();
 await dbank.deployed();
-
  */
-
