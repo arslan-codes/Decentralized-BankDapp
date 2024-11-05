@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
 const Deposit = () => {
   const [Balance, setBalance] = useState(0);
+
   return (
     <Layout>
       <div className="mx-auto max-w-2xl py-14 sm:py-28 lg:py-30">
