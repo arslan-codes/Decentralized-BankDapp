@@ -21,6 +21,7 @@ const Hero = () => {
       console.log("metamask not installed ");
     }
   }
+  const CountContext = createContext();
 
   return (
     <Layout>
