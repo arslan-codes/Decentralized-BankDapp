@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import Dbank from "../contracts/Dbank.json";
 import icon from "../assets/metamask.svg";
 import { ethers } from "ethers";
-
+// 0x360505815e51672d28Ac19d7Cb1C437c61950ae2
 const Hero = () => {
   const [account, setAccount] = useState();
   async function ConnectWallett() {

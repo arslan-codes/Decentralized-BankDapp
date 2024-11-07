@@ -4,21 +4,17 @@ pragma solidity ^0.8.0;
 contract Dbank  {
     address public immutable owner;
     bool private locked;
-    
-    
-
     struct Deposit {
         uint256 amount; 
         string name;
         uint256 depositTime;
     }
-
     struct Transfer {
         uint256 amount; 
         address receiver;
         uint256 depositTime;
     }
-      struct Withdraw {
+    struct Withdraw {
         uint256 amount; 
         uint256 wthdrawTime;
     }
@@ -28,9 +24,9 @@ contract Dbank  {
         bool isPending;
     }
     uint256 public constant MIN_DEPOSIT = 0.01 ether;
-     uint256 private constant WITHDRAWAL_DELAY = 1 minutes; // Can be adjusted for security
+    uint256 private constant WITHDRAWAL_DELAY = 1 minutes; // Can be adjusted for security
 
-//state 
+    //state 
     mapping(address => Deposit[]) public deposits;
     mapping(address => Transfer[]) public tranfers;
     mapping(address=> Withdraw[]) public withdraws;
@@ -39,42 +35,35 @@ contract Dbank  {
     mapping(address => uint256) public lastWithdrawls;
 
     //receiver => ethers  // cam wihtdraw 
+    uint256 private constant _NOT_ENTERED = 1;
+    uint256 private constant _ENTERED = 2;
+    uint256 private _status = _NOT_ENTERED;
 
-
-        uint256 private constant _NOT_ENTERED = 1;
-        uint256 private constant _ENTERED = 2;
-        uint256 private _status = _NOT_ENTERED;
-
-modifier nonReentrant() {
+    modifier nonReentrant() {
     require(_status != _ENTERED, "ReentrancyGuard: reentrant call");
     _status = _ENTERED;
     _;
     _status = _NOT_ENTERED;
-}
-  constructor() {
+    }
+    constructor() {
         owner = msg.sender;
         _status = _NOT_ENTERED;
     }
 
    // Events
-     event DepositMade(address indexed user, uint256 amount, string name);
+    event DepositMade(address indexed user, uint256 amount, string name);
     event WithdrawalRequested(address indexed user, uint256 amount, uint256 requestTime);
     event WithdrawalCompleted(address indexed user, uint256 amount);
     event FundsTransferred(address indexed from, address indexed to, uint256 amount);
 
-  modifier onlyOwner() {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Not the Owner");
         _;
     }
-     
-      
-
     receive() external payable {
         balances[msg.sender] += msg.value;
         //updates the balance of contract 
-       
     }    
-
     fallback() external payable {
         //updates the balance of contract 
         balances[msg.sender] += msg.value;
@@ -87,9 +76,9 @@ modifier nonReentrant() {
     }
 
     function _handleDeposit(string memory _name) private{
-          balances[msg.sender] += msg.value;
-        deposits[msg.sender].push(Deposit(msg.value, _name, block.timestamp));
-    emit DepositMade(msg.sender,msg.value, _name);
+            balances[msg.sender] += msg.value;
+            deposits[msg.sender].push(Deposit(msg.value, _name, block.timestamp));
+            emit DepositMade(msg.sender,msg.value, _name);
 
     }
 
@@ -101,7 +90,6 @@ modifier nonReentrant() {
         pendingPayments[msg.sender]= PendingWithdrawls(amount,block.timestamp,true);
         withdraws[msg.sender].push(Withdraw(amount, block.timestamp));
         emit WithdrawalRequested(msg.sender, amount, block.timestamp);
-
         // emit MoneyWithdrawn(msg.sender, amount);
     }
     function claimWithdraw() public nonReentrant {
@@ -115,13 +103,17 @@ modifier nonReentrant() {
          emit WithdrawalCompleted(msg.sender,  Withdrawl.amount);
 
     }
+    
 
     function TransferMoney(uint256 amount, address _to) public nonReentrant{
         require(_to != address(0), "Invalid recipient address");
         require(balances[msg.sender] >= amount, "insufficient amount"); 
-        require(amount>0,"amount should be greater than");       
+        require(amount>0,"amount should be greater than");
+        unchecked{
         balances[msg.sender] -= amount;
         balances[_to] += amount;
+        }       
+        
         tranfers[msg.sender].push(Transfer(amount,_to,block.timestamp));
         emit FundsTransferred(msg.sender, _to,amount);
     }

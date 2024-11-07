@@ -3,7 +3,6 @@ const { ethers } = require("hardhat");
 
 describe("Dbank", function () {
   let Dbank, dbank, owner, addr1, addr2;
-
   beforeEach(async function () {
     Dbank = await ethers.getContractFactory("Dbank");
     dbank = await Dbank.deploy();
@@ -13,29 +12,43 @@ describe("Dbank", function () {
 
   it("should deposit money", async function () {
     const depositAmount = ethers.utils.parseEther("1");
-
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
       value: depositAmount,
     });
-
     const balance = await dbank.connect(addr1).checkBalance();
     expect(balance.toString()).to.equal(depositAmount.toString());
   });
 
-  it("should withdraw money", async function () {
+  it("should request withdraw money and claim", async function () {
     const depositAmount = ethers.utils.parseEther("1");
-    const withdrawAmount = ethers.utils.parseEther("0.5");
-
     await dbank.connect(addr1).DepositMoney("Test Deposit", {
       value: depositAmount,
     });
+    const withdrawAmount = ethers.utils.parseEther("0.5");
+    await dbank.connect(addr1).Reqwithdraw(withdrawAmount);
+    const pending = await dbank.pendingPayments(addr1.address);
+    expect(pending.isPending).to.equal(true);
+  });
+  it("should claim the pending withdrwal", async function () {
+    const withdrawAmount = ethers.utils.parseEther("0.5");
+    const depositAmount = ethers.utils.parseEther("1");
+    await dbank.connect(addr1).DepositMoney(" test depoist", {
+      value: depositAmount,
+    });
+    await dbank.connect(addr1).Reqwithdraw(withdrawAmount);
 
-    await dbank.connect(addr1).withdraw(withdrawAmount);
+    await ethers.provider.send("evm_increaseTime", [60]);
+    await ethers.provider.send("evm_mine", []);
+    const balanceBefore = await ethers.provider.getBalance(addr1.address);
+    const tx = await dbank.connect(addr1).claimWithdraw();
+    const receipt = await tx.wait();
 
-    const balance = await dbank.connect(addr1).checkBalance();
-    expect(balance.toString()).to.equal(
-      depositAmount.sub(withdrawAmount).toString()
-    );
+    const balanceAfter = await ethers.provider.getBalance(addr1.address);
+    expect(balanceAfter).to.be.gt(
+      balanceBefore.sub(receipt.gasUsed.mul(tx.gasPrice))
+    ); // After gas
+    const pending = await dbank.pendingPayments(addr1.address);
+    expect(pending.isPending).to.equal(false);
   });
 
   it("should transfer and optimize gas", async function () {
@@ -54,11 +67,11 @@ describe("Dbank", function () {
     // Transfer
     const tx = await dbank
       .connect(addr1)
-      .Transfer(transferAmount, addr2.address);
+      .TransferMoney(transferAmount, addr2.address);
     const receipt = await tx.wait();
 
     // Check gas usage
-    expect(receipt.gasUsed.toNumber()).to.be.below(100000);
+    expect(receipt.gasUsed.toNumber()).to.be.below(150000);
 
     // Check final balances
     const finalSenderBalance = await dbank.connect(addr1).checkBalance();

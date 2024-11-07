@@ -8,6 +8,8 @@
 // };
 
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
+
 require("dotenv").config();
 
 module.exports = {
