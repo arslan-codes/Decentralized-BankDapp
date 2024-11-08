@@ -1,11 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
+import abi from "../contracts/DbankAbi.json";
+import { ethers } from "ethers";
+import { use } from "chai";
+
 const Deposit = () => {
   const [Balance, setBalance] = useState(0);
+  const [alldepost, setAlldepost] = useState();
+  const [name, setName] = useState("");
+  const [amount, setaamount] = useState();
+  //user
+  const [signer, setSigner] = useState();
+  const [contract, setContract] = useState();
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  async function Connectwallet() {
+    if (window.ethereum) {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const Address = await signer.getAddress(); // Ensure you await this call
+        const network = await provider.getNetwork();
+        console.log("Connected network:", network);
 
+        setSigner(signer);
+        console.log(Address);
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        setContract(contract);
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else {
+      console.log("metamask not installed");
+    }
+  }
+  //balance check
+  useEffect(() => {
+    async function loadBalance() {
+      if (!contract) {
+        console.log("metamaskk not connecteed");
+      } else {
+        try {
+          const balance = await contract.checkBalance();
+          setBalance(ethers.utils.formatEther(balance));
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+    }
+    loadBalance();
+  }, [contract]);
+
+  //deposit moneyu
   async function DepostMoney() {
-    const signerAddress = "0x31b91a1cb133603d1d256c16e18f349abb6b9082";
+    if (!contract) {
+      console.log("pleaser connect ur accont first");
+    } else {
+      const tx = await contract.DepositMoney("arslan", {
+        value: ethers.parseEther("0.01"),
+      });
+      const receipt = await tx.wait();
+      console.log(receipt);
+      try {
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
   }
 
   return (
@@ -56,7 +116,9 @@ const Deposit = () => {
               </div>
             </div>
             <div className="flex justify-center">
+              <button onClick={Connectwallet}>Connect wallet</button>
               <button
+                onClick={DepostMoney}
                 className="w-3/4 sm:w-full bg-pink-200
                text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
                 inline-flex justify-center items-center  hover:bg-pink-500 hover:text-white focus-visible:outline 

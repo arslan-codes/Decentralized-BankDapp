@@ -21,7 +21,10 @@ const Hero = () => {
       console.log("metamask not installed ");
     }
   }
-  const CountContext = createContext();
+
+  async function getAllDeposits() {}
+
+  // const CountContext = createContext();
 
   return (
     <Layout>
