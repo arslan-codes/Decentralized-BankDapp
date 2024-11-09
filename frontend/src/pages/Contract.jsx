@@ -4,7 +4,7 @@ import abi from "../contracts/DbankAbi.json"; // Save your ABI as a JSON file an
 import { ethers } from "hardhat";
 const Contract = () => {
   const ContextProvider = createContext();
-  // ContractAddress = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
+  // ContractAddress = 0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e;
   const contractAddress = process.env.ContractAddress;
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = provider.getSigner();

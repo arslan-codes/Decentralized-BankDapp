@@ -97,9 +97,9 @@ contract Dbank  {
         require(Withdrawl.isPending,"No pending withdrwals");
         require(block.timestamp >= Withdrawl.requestTime + WITHDRAWAL_DELAY,
             "Withdrawal delay not met");
-            (bool success, ) = payable(msg.sender).call{value: Withdrawl.amount}("");
+            // (bool success, ) = payable(msg.sender).call{value: Withdrawl.amount}("");
          delete pendingPayments[msg.sender];
-         require(success, "Transfer failed");
+        //  require(success, "Transfer failed");
          emit WithdrawalCompleted(msg.sender,  Withdrawl.amount);
 
     }

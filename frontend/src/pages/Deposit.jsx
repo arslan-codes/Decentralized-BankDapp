@@ -3,17 +3,19 @@ import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
 import abi from "../contracts/DbankAbi.json";
 import { ethers } from "ethers";
-import { use } from "chai";
 
 const Deposit = () => {
   const [Balance, setBalance] = useState(0);
-  const [alldepost, setAlldepost] = useState();
+  const [deposits, setDeposits] = useState([]);
+  const [successfulltransaction, setsuccessfulltransaction] = useState();
+
   const [name, setName] = useState("");
-  const [amount, setaamount] = useState();
+  const [amount, setAmmount] = useState(0);
+
   //user
   const [signer, setSigner] = useState();
   const [contract, setContract] = useState();
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  // const contractAddress = "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e";
   async function Connectwallet() {
     if (window.ethereum) {
       try {
@@ -25,7 +27,11 @@ const Deposit = () => {
 
         setSigner(signer);
         console.log(Address);
-        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const contract = new ethers.Contract(
+          "0x4b631e0b2d9b86e45b71e7a0a7c59983a25f502e",
+          abi,
+          signer
+        );
         setContract(contract);
       } catch (error) {
         console.log(error.message);
@@ -34,6 +40,40 @@ const Deposit = () => {
       console.log("metamask not installed");
     }
   }
+  //getall deposit
+  useEffect(() => {
+    async function getalldepostis() {
+      if (!contract) {
+        console.log("Connect Your wallet");
+        return;
+      } else {
+        try {
+          const alldeposits = await contract.getAllDepositss();
+          const parseDeposits = alldeposits.map((deposit) => ({
+            amount: ethers.formatEther(deposit.amount),
+            name: deposit.name,
+            depositTime: new Date(
+              Number(deposit.depositTime) * 1000
+            ).toLocaleString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false, // Use 24-hour format; set to true for 12-hour with AM/PM
+            }),
+          }));
+          console.log(parseDeposits);
+          setDeposits(parseDeposits);
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+    }
+    getalldepostis();
+  }, [contract, Balance]);
+
   //balance check
   useEffect(() => {
     async function loadBalance() {
@@ -42,25 +82,32 @@ const Deposit = () => {
       } else {
         try {
           const balance = await contract.checkBalance();
-          setBalance(ethers.utils.formatEther(balance));
+          console.log(balance);
+          setBalance(ethers.formatEther(balance));
         } catch (error) {
           console.log(error.message);
         }
       }
     }
     loadBalance();
-  }, [contract]);
+  }, [contract, successfulltransaction]);
 
   //deposit moneyu
   async function DepostMoney() {
     if (!contract) {
       console.log("pleaser connect ur accont first");
     } else {
-      const tx = await contract.DepositMoney("arslan", {
-        value: ethers.parseEther("0.01"),
-      });
-      const receipt = await tx.wait();
-      console.log(receipt);
+      if (name && amount) {
+        const tx = await contract.DepositMoney(name, {
+          value: ethers.parseEther(amount.toString()),
+        });
+        const receipt = await tx.wait();
+        setsuccessfulltransaction((e) => e + 1);
+        // console.log(receipt);
+      } else {
+        console.log("please enter both values");
+      }
+
       try {
       } catch (error) {
         console.log(error.message);
@@ -90,11 +137,12 @@ const Deposit = () => {
                 </p>
                 <input
                   type="text"
-                  placeholder="Name"
-                  className="text-base  border-2 border-gray-200    rounded-xl 
-                  sm:text-2xl w-full form-control font-semibold text-gray-800  
-                  py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
+                  placeholder="Name "
+                  className="text-base  border-2 border-gray-200    rounded-md 
+                  sm:text-xl w-full form-control font-medium text-gray-800  
+                  py-2 sm:py-4   ring-black  focus:rounded-md px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
@@ -108,15 +156,24 @@ const Deposit = () => {
                 <input
                   type="text"
                   placeholder="0 Eth"
-                  className="text-base  border-2 border-gray-200    rounded-xl 
-                  sm:text-2xl w-full form-control font-semibold text-gray-800  
-                  py-3 sm:py-6   ring-black  focus:rounded-2xl px-2 sm:px-4
+                  className="text-base  border-2 border-gray-200    rounded-md 
+                  sm:text-xl w-full form-control font-medium text-gray-800  
+                  py-2 sm:py-4   ring-black  focus:rounded-md px-2 sm:px-4
                    focus:ring-blue-500 focus:border-blue-500 block "
+                  onChange={(e) => setAmmount(e.target.value)}
                 />
               </div>
             </div>
             <div className="flex justify-center">
-              <button onClick={Connectwallet}>Connect wallet</button>
+              <button
+                onClick={Connectwallet}
+                className="w-3/4 sm:3/4 bg-amber-500
+               text-pink-100 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
+                inline-flex justify-center items-center  hover:bg-amber-900 hover:text-white focus-visible:outline 
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Connect wallet
+              </button>
               <button
                 onClick={DepostMoney}
                 className="w-3/4 sm:w-full bg-pink-200
@@ -164,11 +221,15 @@ const Deposit = () => {
                 <div>
                   <div class="w-full h-48 overflow-y-auto border rounded-lg p-2">
                     <ul class="space-y-2 text-black">
-                      {/* {transaction.map((tx) => (
-                        <li className="border-b pb-2" key={tx.id}>
-                          {tx.detail}
+                      {deposits.map((deposit, index) => (
+                        <li
+                          className="border-b  pb-2 text-xs sm:text-sm flex justify-between"
+                          key={index}
+                        >
+                          <span>{deposit.amount} eth </span>
+                          <span>{deposit.depositTime}</span>
                         </li>
-                      ))} */}
+                      ))}
                     </ul>
                   </div>
                 </div>
