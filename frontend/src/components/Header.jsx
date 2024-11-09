@@ -6,7 +6,7 @@ const Header = () => {
     <div className="flex justify-center">
       <div
         className=" w-4/5 md:w-4/5   md: fixed top-2 z-50    m-2  bg-gradient-to-r from-pink-900 bg-opacity-30
-        backdrop-blur-lg flex justify-center  rounded-full"
+        backdrop-blur-lg flex justify-between  rounded-full"
       >
         <div className="flex flex-row   lg:flex-row gap-0 sm:gap-0 md:gap-6">
           <RouterLink
@@ -115,6 +115,15 @@ const Header = () => {
 
             <p className="hidden sm:text-sm  sm:block">Transfer </p>
           </RouterLink>
+        </div>
+        <div className="flex flex-row   lg:flex-row gap-0 sm:gap-0 md:gap-6">
+          <button
+            smooth={true}
+            duration={500}
+            className="btn btn-ghost  text-white cursor-pointer text-sm lg:text-lg sm:text-base"
+          >
+            Connect wallet
+          </button>
         </div>
       </div>
     </div>
