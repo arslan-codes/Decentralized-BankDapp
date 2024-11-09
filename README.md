@@ -1,86 +1,182 @@
-# Dbank - A Decentralized Banking Smart Contract
+# Dbank DApp
+
+This project is a decentralized bank (Dbank) application built with Solidity, React, and Hardhat. The smart contract enables users to deposit funds, transfer funds to other users, and request and claim withdrawals. The frontend interface is built with React and Vite, providing users a simple UI to interact with the contract functions.
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [Project Structure](#project-structure)
+6. [Smart Contract Details](#smart-contract-details)
+7. [Frontend](#frontend)
+8. [Backend](#backend)
+9. [License](#license)
 
 ## Overview
 
-Dbank is a decentralized banking smart contract built on the Ethereum blockchain. It allows users to deposit Ether, withdraw funds, and transfer money between accounts, all while adhering to Islamic banking principles by avoiding interest. The contract implements features for managing user deposits and transfers securely, including anti-reentrancy protection.
+Dbank is a Solidity-based smart contract that enables users to:
+
+- Deposit funds and keep a record of each deposit
+- Transfer funds to other users
+- Request withdrawals with a specified delay time
+- Claim pending withdrawals after the delay period
+
+The frontend uses React and integrates with the smart contract to enable easy interaction for users.
 
 ## Features
 
-- **Deposit Funds**: Users can deposit Ether into their account with a minimum deposit requirement.
-- **Withdraw Funds**: Users can withdraw Ether from their balance.
-- **Transfer Funds**: Users can transfer Ether to other users seamlessly.
-- **Anti-Reentrancy Protection**: Implemented to safeguard against reentrancy attacks.
-- **Events Logging**: Events are emitted for deposits, withdrawals, and transfers for transparency.
-
-## Smart Contract Details
-
-### Contract: Dbank
-
-- **Owner**: The contract owner, who deploys the contract.
-- **Deposits**: Users can make deposits by sending Ether to the contract.
-- **Withdrawals**: Users can withdraw their deposited funds.
-- **Transfers**: Users can send Ether to other addresses.
-
-### Data Structures
-
-- **Deposit Struct**: Holds information about user deposits, including amount, name, and deposit time.
-- **Mappings**:
-  - `deposits`: Maps user addresses to their deposit information.
-  - `balances`: Maps user addresses to their current balances.
-
-### Events
-
-- `DepositMade`: Emitted when a deposit is made.
-- `MoneyWithdrawn`: Emitted when money is withdrawn.
-- `FundsTransfered`: Emitted when funds are transferred between users.
+- **Deposits:** Allows users to make deposits with a minimum amount requirement.
+- **Withdrawals:** Users can request a withdrawal, which they can claim after a delay period.
+- **Transfers:** Users can transfer funds directly to other addresses.
+- **Event Logging:** Important transactions such as deposits, withdrawals, and transfers are recorded and emitted as events.
 
 ## Installation
+
+### Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) and npm
+- [MetaMask](https://metamask.io/) (for wallet interactions)
+
+### Steps
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/arslan-codes/Decentralized-BankDapp.git
-
+   git clone https://github.com/yourusername/Dbank.git
+   cd Dbank
    ```
 
-2. Install dependencies (if using Hardhat):
+2. **Backend (Hardhat):**
+
+   Install backend dependencies:
+
    ```bash
+   cd backend
    npm install
    ```
 
-## Testing
+3. **Frontend (React/Vite):**
 
-To test the smart contract using Ganache, follow these steps:
+   Install frontend dependencies:
 
-1. Start Ganache and create a new workspace.
-2. Deploy the smart contract using Hardhat:
    ```bash
-   npx hardhat run scripts/deploy.js --network sepolia
+   cd ../frontend
+   npm install
    ```
-3. Run the tests:
-   ```bash
-   npx hardhat test
+
+4. **Environment Variables**
+
+   Create a `.env` file in the backend directory with the following (example for using Alchemy and MetaMask with Sepolia):
+
+   ```plaintext
+   ALCHEMY_API_URL="https://eth-sepolia.alchemyapi.io/v2/your-api-key"
+   PRIVATE_KEY="your-private-key"
    ```
 
 ## Usage
 
-1. **Deposit Ether**:
+### Start the DApp
 
-   ```solidity
-   dbank.DepositMoney("YourName") payable
+1. **Compile the Smart Contract**:
+
+   ```bash
+   cd backend
+   npx hardhat compile
    ```
 
-2. **Withdraw Ether**:
+2. **Deploy the Contract**:
 
-   ```solidity
-   dbank.withdraw(amount)
+   ```bash
+   npx hardhat run scripts/deploy.js --network sepolia
    ```
 
-3. **Transfer Ether**:
-   ```solidity
-   dbank.Transfer(amount, recipientAddress)
+   Save the contract address generated.
+
+3. **Run the Frontend**:
+
+   ```bash
+   cd ../frontend
+   npm run dev
    ```
 
-## Contributing
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or fixes.
+## Project Structure
+
+```plaintext
+Dbank/
+├── backend/                # Contains smart contracts and Hardhat scripts
+│   ├── contracts/          # Solidity contracts
+│   ├── scripts/            # Deployment scripts
+│   ├── test/               # Contract tests
+│   ├── hardhat.config.js   # Hardhat configuration
+│   └── .env                # Environment variables
+├── frontend/               # Contains React application files
+│   ├── public/             # Static assets
+│   ├── src/                # React components and hooks
+│   ├── App.js              # Main application component
+│   ├── package.json        # Frontend dependencies
+│   └── vite.config.js      # Vite configuration
+└── README.md               # Project README
+```
+
+## Smart Contract Details
+
+### Contract: `Dbank`
+
+- **State Variables:**
+
+  - `balances`: Keeps track of each user’s balance.
+  - `deposits`, `withdrawals`, `transfers`: Track respective transactions.
+  - `pendingPayments`: Manages pending withdrawals with delay requirements.
+  - `owner`: Contract owner address.
+
+- **Functions:**
+  - `DepositMoney(string name)`: Allows users to deposit funds.
+  - `Reqwithdraw(uint256 amount)`: Request a withdrawal.
+  - `claimWithdraw()`: Claim a pending withdrawal after delay.
+  - `TransferMoney(uint256 amount, address to)`: Transfer funds to another address.
+  - `checkBalance()`, `checkPendings()`, `getAllDeposits()`, `getAllWithdraws()`, `getAllTransfers()`: View balance and transaction history.
+
+## Frontend
+
+The frontend is built with React, Vite, and ethers.js for interacting with the Ethereum blockchain. Key components include:
+
+- **Wallet Connection:** Allows users to connect with MetaMask.
+- **Deposit Interface:** Users can enter a deposit amount and submit.
+- **Withdrawal Interface:** Users can request and claim withdrawals.
+- **Transfer Interface:** Users can transfer funds to other addresses.
+
+Dependencies include:
+
+- `axios` for API calls.
+- `ethers` for Ethereum blockchain interaction.
+- `react-router-dom` for routing.
+- `tailwindcss` and `daisyui` for UI styling.
+
+### Run Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+## Backend
+
+The backend is managed by Hardhat, which provides tools to compile, test, and deploy the smart contract. Hardhat dependencies include:
+
+- `@nomicfoundation/hardhat-toolbox` for testing and deployment.
+- `solidity-coverage` and `hardhat-gas-reporter` for coverage and gas usage.
+
+### Run Tests
+
+To run tests:
+
+```bash
+cd backend
+npx hardhat test
+```
