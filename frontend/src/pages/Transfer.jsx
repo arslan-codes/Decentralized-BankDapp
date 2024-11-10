@@ -3,10 +3,11 @@ import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
 import { ethers } from "ethers";
 import DbankContext from "../components/DbankContext";
+import { toast } from "react-toastify";
 
 const Transfer = () => {
   // const contractAddress = "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e";
-  const { contract, Account, Balance } = useContext(DbankContext);
+  const { contract, Account, Balance, setBalance } = useContext(DbankContext);
   // const [Balance, setBalance] = useState(0);
   const [Amount, setAmmount] = useState(0);
   const [Alltransfers, setAlltransfers] = useState([]);
@@ -16,7 +17,7 @@ const Transfer = () => {
   useEffect(() => {
     async function getAlltransfers() {
       if (!contract) {
-        console.log("connect your wallet");
+        toast.warning("connect your wallet");
         return;
       } else {
         const Alltransfers = await contract.getAlltransfers();
@@ -44,7 +45,7 @@ const Transfer = () => {
 
   async function TransferAmount() {
     if (!contract) {
-      console.log("Connect your wallet");
+      toast.warning("Connect your wallet");
     } else {
       try {
         const tx = await contract.TransferMoney(
@@ -54,8 +55,28 @@ const Transfer = () => {
         const receipt = await tx.wait();
         settransactionMade((e) => e + 1);
         console.log(receipt);
+        toast.success("Amount Transfered");
+        const balance = await contract.checkBalance();
+        setBalance(ethers.formatEther(balance));
       } catch (error) {
-        console.log(error.message);
+        let message = "An error occurred during the transaction.";
+
+        // Check for MetaMask revert reason
+        if (error.reason) {
+          message = error.reason; // Get revert reason if available
+        } else if (error.message) {
+          // Extract revert reason from the message if it's embedded
+          const matched = error.message.match(
+            /reverted with reason string '(.*)'/
+          );
+          if (matched) {
+            message = matched[1]; // Capture the specific revert reason
+          } else {
+            message = error.message; // Show general error message
+          }
+        }
+
+        toast.error(`Transaction failed: ${message}`);
       }
     }
   }

@@ -19,8 +19,8 @@ export default function About() {
   }
 
   return (
-    <Layout>
-      <div className="relative isolate px-6  ">
+    <>
+      <div className="relative isolate px-6  " id="learn-more">
         {/* Background Gradient */}
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -37,7 +37,7 @@ export default function About() {
 
         <div className="mx-auto py-20 sm:py-28 lg:py-30">
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-4xl">
               About Dbank
             </h1>
             <div className="mt-4 max-w-3xl mx-auto">
@@ -141,6 +141,6 @@ export default function About() {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

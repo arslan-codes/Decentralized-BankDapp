@@ -2,10 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 import DbankContext from "../components/DbankContext";
 
 const Deposit = () => {
-  const { contract, Account, Balance } = useContext(DbankContext);
+  const { contract, Account, Balance, setBalance } = useContext(DbankContext);
   const [deposits, setDeposits] = useState([]);
   const [successfulltransaction, setsuccessfulltransaction] = useState();
 
@@ -18,7 +19,7 @@ const Deposit = () => {
   useEffect(() => {
     async function getalldepostis() {
       if (!contract) {
-        console.log("Connect Your wallet");
+        toast.warning("Connect Your wallet");
         return;
       } else {
         try {
@@ -51,22 +52,47 @@ const Deposit = () => {
   //deposit moneyu
   async function DepostMoney() {
     if (!contract) {
-      console.log("pleaser connect ur accont first");
+      toast.warning("pleaser connect ur accont first");
     } else {
-      if (name && amount) {
-        const tx = await contract.DepositMoney(name, {
-          value: ethers.parseEther(amount.toString()),
-        });
-        const receipt = await tx.wait();
-        setsuccessfulltransaction((e) => e + 1);
-        // console.log(receipt);
-      } else {
-        console.log("please enter both values");
-      }
-
       try {
+        if (name && amount) {
+          const tx = await contract.DepositMoney(name, {
+            value: ethers.parseEther(amount.toString()),
+          });
+          const receipt = await tx.wait();
+          // event DepositMade(address indexed user, uint256 amount, string name);
+
+          contract.on("DepositMade", (Account, amount, name) => {
+            toast.success(`Deposit made of ${amount} from ${Account},`);
+          });
+
+          toast.success("Deposit Made successfully");
+          const balance = await contract.checkBalance();
+          setBalance(ethers.formatEther(balance));
+          setsuccessfulltransaction((e) => e + 1);
+          // console.log(receipt);
+        } else {
+          toast.error("please enter both values");
+        }
       } catch (error) {
-        console.log(error.message);
+        // toast.error(error.message);
+        let message = "An error occurred during the transaction.";
+        if (error.reason) {
+          message = error.reason; // Get revert reason if available
+        } else if (error.message) {
+          const matched = error.message.match(
+            /reverted with reason string '(.*)'/
+          );
+          if (matched) {
+            message = matched[1]; // Capture the specific revert reason
+          } else {
+            message = error.message; // Show general error message
+          }
+        }
+
+        toast.error(
+          `Transaction failed: ${message} > deposit must be >0.01 eth`
+        );
       }
     }
   }

@@ -5,18 +5,19 @@ import DbankContext from "./DbankContext";
 
 const Header = () => {
   const { ConnectWallet, Account } = useContext(DbankContext);
+
   return (
     <div className="flex justify-center">
       <div
-        className=" w-3/4 md:w-4/5   fixed top-2 z-50    m-2  bg-gradient-to-r from-pink-900 bg-opacity-30
+        className=" w-4/5 sm:w-fit md:w-4/5  fixed top-2 z-50      m-2   bg-gradient-to-r from-pink-900 bg-opacity-30
         backdrop-blur-lg flex justify-evenly h-12 rounded-full"
       >
-        <div className="flex flex-row   lg:flex-row gap-0 sm:gap-0 md:gap-6">
+        <div className="flex flex-row justify-evenly lg:flex-row gap-0 sm:gap-0 ">
           <RouterLink
             to="/"
             smooth={true}
             duration={500}
-            className="btn btn-ghost  text-white cursor-pointer text-sm lg:text-lg sm:text-base"
+            className="btn btn-ghost  text-white cursor-pointer md:text-sm lg:text-lg sm:text-xs"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +25,7 @@ const Header = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className=" size-6"
+              className=" size-5 sm:size-5 md:size-6"
             >
               <path
                 strokeLinecap="round"
@@ -32,16 +33,19 @@ const Header = () => {
                 d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
               />
             </svg>
-            <p className="hidden sm:text-sm  sm:block">Home</p>
+            <p className="hidden sm:text-sm    sm:block">Home</p>
           </RouterLink>
-          <RouterLink to="/about" className="btn btn-ghost text-l text-white">
+          {/* <RouterLink
+            to="/about"
+            className="btn btn-ghost  text-white cursor-pointer md:text-sm lg:text-lg sm:text-xs"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className=" size-6"
+              className=" size-5 sm:size-5 md:size-6"
             >
               <path
                 strokeLinecap="round"
@@ -50,15 +54,18 @@ const Header = () => {
               />
             </svg>
             <p className="hidden sm:text-sm  sm:block">About</p>
-          </RouterLink>
-          <RouterLink to="/deposit" className="btn btn-ghost text-l text-white">
+          </RouterLink> */}
+          <RouterLink
+            to="/deposit"
+            className="btn btn-ghost  text-white cursor-pointer md:text-sm lg:text-lg sm:text-xs"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className=" size-6"
+              className=" size-5 md:size-6"
             >
               <path
                 strokeLinecap="round"
@@ -70,7 +77,7 @@ const Header = () => {
           </RouterLink>
           <RouterLink
             to="/withdraw"
-            className="btn btn-ghost text-sm text-white md:text-lg"
+            className="btn btn-ghost  text-white cursor-pointer md:text-sm lg:text-lg sm:text-xs"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +85,7 @@ const Header = () => {
               viewBox="0 0 320 512"
               strokeWidth={1.5}
               stroke="currentColor"
-              className=" size-6"
+              className=" size-5 sm:size-5 md:size-6"
             >
               <path
                 fill="#ffffff"
@@ -93,20 +100,15 @@ const Header = () => {
           </RouterLink>
           <RouterLink
             to="/transfer"
-            className="btn btn-ghost text-sm text-white md:text-lg"
+            className="btn btn-ghost  text-white cursor-pointer md:text-sm lg:text-lg sm:text-xs"
           >
-            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <path
-                fill="#ffffff"
-              />
-            </svg> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 320 512"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className=" size-5 sm:size-5 md:size-6"
             >
               <path
                 fill="#ffffff"
@@ -118,26 +120,24 @@ const Header = () => {
 
             <p className="hidden sm:text-sm  sm:block">Transfer </p>
           </RouterLink>
-        </div>
-        <div className="flex flex-row   lg:flex-row gap-0 sm:gap-0 md:gap-6">
           <button
             type="button"
-            className="text-gray-900  font-semibold hover:text-white rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2 cursor-pointer"
+            className="btn btn-ghost text-sm text-white md:text-base"
             onClick={ConnectWallet}
           >
             {Account ? (
-              <div
-                className="text justify-between flex text-white"
-                title={Account} // Full address shown on hover
+              <span
+                className="truncate max-w-[50px] md:max-w-[80px]"
+                title={Account}
               >
-                {Account.slice(0, Account.length / 6)}
-                ...
-              </div>
+                {Account.slice(0, 6)}.. {Account.slice(-4)}
+              </span>
             ) : (
-              <img src={icon} alt="icon" className="w-6 h-5 me-2 -ms-1" />
+              <>
+                <img src={icon} alt="MetaMask" className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Connect</span>
+              </>
             )}
-
-            {/* {Account ? <h1>connected</h1> : <h1>Connect with MetaMask</h1>} */}
           </button>
         </div>
       </div>

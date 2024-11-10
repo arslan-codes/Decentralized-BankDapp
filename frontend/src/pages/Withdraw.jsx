@@ -3,11 +3,12 @@ import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
 import DbankContext from "../components/DbankContext";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 
 // const contractAddress = "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e";
 
 const Withdraw = () => {
-  const { contract, Account, Balance } = useContext(DbankContext);
+  const { contract, Account, Balance, setBalance } = useContext(DbankContext);
 
   const [allwithdraws, setAllwithdraws] = useState([]);
   const [WithdrawMade, setWithdrawMade] = useState();
@@ -17,7 +18,7 @@ const Withdraw = () => {
   useEffect(() => {
     async function Getallwithdraws() {
       if (!contract) {
-        console.log("connect your wallet");
+        toast.warning("connect your wallet");
       } else {
         const Allwithdraws = await contract.getAllWithdraws();
         const parsewithdraws = Allwithdraws.map((Withdraw) => ({
@@ -44,7 +45,7 @@ const Withdraw = () => {
 
   async function ReqWithdraw() {
     if (!contract) {
-      console.log("please connect your wallet first");
+      toast.warning("please connect your wallet first");
       return;
     } else {
       try {
@@ -53,24 +54,61 @@ const Withdraw = () => {
         );
         const receipt = await tx.wait();
         console.log(receipt);
-        console.log("request received for withdrawl");
+        toast.success("request received for withdrawl");
       } catch (error) {
-        console.log(error.message);
+        let message = "An error occurred during the transaction.";
+
+        // Check for MetaMask revert reason
+        if (error.reason) {
+          message = error.reason; // Get revert reason if available
+        } else if (error.message) {
+          // Extract revert reason from the message if it's embedded
+          const matched = error.message.match(
+            /reverted with reason string '(.*)'/
+          );
+          if (matched) {
+            message = matched[1]; // Capture the specific revert reason
+          } else {
+            message = error.message; // Show general error message
+          }
+        }
+
+        toast.error(`Transaction failed: ${message}`);
       }
     }
   }
 
   async function claimWithdraw() {
     if (!contract) {
-      console.log("please connect your wallet first");
+      toast.warning("please connect your wallet first");
     } else {
       try {
         const tx = await contract.claimWithdraw();
         const receipt = await tx.wait();
         console.log(receipt);
+        toast.success("Money withdrawn-Check your wallet");
+        const balance = await contract.checkBalance();
+        setBalance(ethers.formatEther(balance));
         setWithdrawMade((e) => e + 1);
       } catch (error) {
-        console.log(error.message);
+        let message = "An error occurred during the transaction.";
+
+        // Check for MetaMask revert reason
+        if (error.reason) {
+          message = error.reason; // Get revert reason if available
+        } else if (error.message) {
+          // Extract revert reason from the message if it's embedded
+          const matched = error.message.match(
+            /reverted with reason string '(.*)'/
+          );
+          if (matched) {
+            message = matched[1]; // Capture the specific revert reason
+          } else {
+            message = error.message; // Show general error message
+          }
+        }
+
+        toast.error(`Transaction failed: ${message}`);
       }
     }
   }
@@ -126,7 +164,7 @@ const Withdraw = () => {
                text-white font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
                 inline-flex justify-center items-center  hover:bg-green-600 hover:text-white focus-visible:outline 
                  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={ReqWithdraw}
+                onClick={claimWithdraw}
               >
                 Claim Amount Withdrawn
               </button>
