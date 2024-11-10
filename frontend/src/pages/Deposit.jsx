@@ -1,45 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
-import abi from "../contracts/DbankAbi.json";
 import { ethers } from "ethers";
+import DbankContext from "../components/DbankContext";
 
 const Deposit = () => {
-  const [Balance, setBalance] = useState(0);
+  const { contract, Account, Balance } = useContext(DbankContext);
   const [deposits, setDeposits] = useState([]);
   const [successfulltransaction, setsuccessfulltransaction] = useState();
 
   const [name, setName] = useState("");
   const [amount, setAmmount] = useState(0);
 
-  //user
-  const [signer, setSigner] = useState();
-  const [contract, setContract] = useState();
   // const contractAddress = "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e";
-  async function Connectwallet() {
-    if (window.ethereum) {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const Address = await signer.getAddress(); // Ensure you await this call
-        const network = await provider.getNetwork();
-        console.log("Connected network:", network);
 
-        setSigner(signer);
-        console.log(Address);
-        const contract = new ethers.Contract(
-          "0x4b631e0b2d9b86e45b71e7a0a7c59983a25f502e",
-          abi,
-          signer
-        );
-        setContract(contract);
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
-      console.log("metamask not installed");
-    }
-  }
   //getall deposit
   useEffect(() => {
     async function getalldepostis() {
@@ -72,25 +46,7 @@ const Deposit = () => {
       }
     }
     getalldepostis();
-  }, [contract, Balance]);
-
-  //balance check
-  useEffect(() => {
-    async function loadBalance() {
-      if (!contract) {
-        console.log("metamaskk not connecteed");
-      } else {
-        try {
-          const balance = await contract.checkBalance();
-          console.log(balance);
-          setBalance(ethers.formatEther(balance));
-        } catch (error) {
-          console.log(error.message);
-        }
-      }
-    }
-    loadBalance();
-  }, [contract, successfulltransaction]);
+  }, [contract, Balance, successfulltransaction]);
 
   //deposit moneyu
   async function DepostMoney() {
@@ -166,15 +122,6 @@ const Deposit = () => {
             </div>
             <div className="flex justify-center">
               <button
-                onClick={Connectwallet}
-                className="w-3/4 sm:3/4 bg-amber-500
-               text-pink-100 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
-                inline-flex justify-center items-center  hover:bg-amber-900 hover:text-white focus-visible:outline 
-                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Connect wallet
-              </button>
-              <button
                 onClick={DepostMoney}
                 className="w-3/4 sm:w-full bg-pink-200
                text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
@@ -206,9 +153,16 @@ const Deposit = () => {
             {/* Sell Section */}
             <div className="flex justify-start items-center mb-4">
               <div className="w-full">
-                <p className="text-gray-600 text-sm sm:text-2xl font-semibold my-1 sm:my-2">
-                  Current Balance <p className="text-gray-900">{Balance}-Eth</p>
-                </p>
+                <div className="text-gray-600 text-sm sm:text-2xl font-semibold my-1 sm:my-2">
+                  Current Balance
+                  <div className="text-gray-900 text-lg md:text-2xl">
+                    {Account
+                      ? Balance
+                        ? `${Balance} - Eth`
+                        : "Loading"
+                      : "0 - Eth"}
+                  </div>
+                </div>
               </div>
             </div>
 

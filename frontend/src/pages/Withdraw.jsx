@@ -1,48 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
-import { use } from "chai";
+import DbankContext from "../components/DbankContext";
 import { ethers } from "ethers";
-import abi from "../contracts/DbankAbi.json";
-import Deposit from "./Deposit";
+
 // const contractAddress = "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e";
 
 const Withdraw = () => {
-  const [Balance, setBalance] = useState(0);
-  const [contract, setContract] = useState();
+  const { contract, Account, Balance } = useContext(DbankContext);
+
   const [allwithdraws, setAllwithdraws] = useState([]);
   const [WithdrawMade, setWithdrawMade] = useState();
   const [amount, setAmmount] = useState(0);
 
-  async function ConnectWallet() {
-    if (window.ethereum) {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const address = await signer.getAddress();
-        console.log(address);
-        const contract = new ethers.Contract(
-          "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e",
-          abi,
-          signer
-        );
-        setContract(contract);
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
-      console.log("metamask not installed");
-    }
-  }
   // getAllWithdraws;
   useEffect(() => {
     async function Getallwithdraws() {
       if (!contract) {
         console.log("connect your wallet");
       } else {
-        const Balance = await contract.checkBalance();
-        console.log(Balance);
-        setBalance(ethers.formatEther(Balance));
         const Allwithdraws = await contract.getAllWithdraws();
         const parsewithdraws = Allwithdraws.map((Withdraw) => ({
           amount: ethers.formatEther(Withdraw.amount),
@@ -132,48 +108,27 @@ const Withdraw = () => {
                 />
               </div>
             </div>
-            <button
-              className="w-full sm:w-full bg-amber-800
-               text-pink-100 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
-                inline-flex justify-center items-center  hover:bg-pink-500 hover:text-white focus-visible:outline 
-                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={ConnectWallet}
-            >
-              Connect Wallet
-            </button>
+
             <div className="flex justify-center">
-              <button
-                className="w-3/4 sm:w-full bg-yellow-500
-               text-pink-100 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
-                inline-flex justify-center items-center  hover:bg-pink-500 hover:text-white focus-visible:outline 
-                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={claimWithdraw}
-              >
-                claimWithdraw
-              </button>
               <button
                 className="w-3/4 sm:w-full bg-pink-200
                text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
-                inline-flex justify-center items-center  hover:bg-pink-500 hover:text-white focus-visible:outline 
+                inline-flex justify-center items-center  hover:bg-pink-900 hover:text-white focus-visible:outline 
                  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 onClick={ReqWithdraw}
               >
-                <svg
-                  className="w-4 h-4 me-2 -ms-1 text-[#626890]"
-                  aria-hidden="true"
-                  focusable="false"
-                  data-prefix="fab"
-                  data-icon="ethereum"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 320 512"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"
-                  ></path>
-                </svg>{" "}
                 Withdraw
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <button
+                className="w-3/4 sm:w-full bg-green-800
+               text-white font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
+                inline-flex justify-center items-center  hover:bg-green-600 hover:text-white focus-visible:outline 
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={ReqWithdraw}
+              >
+                Claim Amount Withdrawn
               </button>
             </div>
             {/* Get Started Button */}
@@ -182,9 +137,16 @@ const Withdraw = () => {
             {/* Sell Section */}
             <div className="flex justify-start items-center mb-4">
               <div className="w-full">
-                <p className="text-gray-600 text-sm sm:text-2xl font-semibold my-1 sm:my-2">
-                  Current Balance <p className="text-gray-900">{Balance}-Eth</p>
-                </p>
+                <div className="text-gray-600 text-sm sm:text-2xl font-semibold my-1 sm:my-2">
+                  Current Balance
+                  <div className="text-gray-900 text-lg md:text-2xl">
+                    {Account
+                      ? Balance
+                        ? `${Balance} - Eth`
+                        : "Loading"
+                      : "0 - Eth"}
+                  </div>
+                </div>
               </div>
             </div>
 

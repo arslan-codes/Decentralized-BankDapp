@@ -1,48 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import SwapForm from "./SwapFrom";
-import abi from "../contracts/DbankAbi.json";
-import { ethers, parseEther } from "ethers";
-import { transform } from "typescript";
+import { ethers } from "ethers";
+import DbankContext from "../components/DbankContext";
+
 const Transfer = () => {
   // const contractAddress = "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e";
-
-  const [Balance, setBalance] = useState(0);
+  const { contract, Account, Balance } = useContext(DbankContext);
+  // const [Balance, setBalance] = useState(0);
   const [Amount, setAmmount] = useState(0);
-  const [contract, setContract] = useState();
   const [Alltransfers, setAlltransfers] = useState([]);
   const [transactionMade, settransactionMade] = useState();
   const [receiver, setReceiver] = useState();
-  async function ConnectWallet() {
-    if (window.ethereum) {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const Address = await signer.getAddress();
-        const contract = new ethers.Contract(
-          "0x4b631E0b2d9b86e45b71e7A0a7C59983A25F502e",
-          abi,
-          signer
-        );
-        setContract(contract);
-        console.log(Address);
-        console.log(contract);
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
-      console.log("Metamask not installed");
-    }
-  }
+
   useEffect(() => {
     async function getAlltransfers() {
       if (!contract) {
         console.log("connect your wallet");
         return;
       } else {
-        const balance = await contract.checkBalance();
-        console.log(balance);
-        setBalance(ethers.formatEther(balance));
         const Alltransfers = await contract.getAlltransfers();
         const parseTransfers = Alltransfers.map((transfer) => ({
           amount: ethers.formatEther(transfer.amount),
@@ -133,7 +109,7 @@ const Transfer = () => {
                 />
               </div>
             </div>
-            <button
+            {/* <button
               className="w-3/4 sm:w-full bg-pink-200
                text-pink-600 font-semibold py-3 rounded-lg mt-2 text-sm px-5 text-center
                 inline-flex justify-center items-center  hover:bg-pink-500 hover:text-white focus-visible:outline 
@@ -141,7 +117,7 @@ const Transfer = () => {
               onClick={ConnectWallet}
             >
               Connnect wallet
-            </button>
+            </button> */}
             <div className="flex justify-center">
               <button
                 className="w-3/4 sm:w-full bg-pink-200
@@ -175,9 +151,16 @@ const Transfer = () => {
             {/* Sell Section */}
             <div className="flex justify-start items-center mb-4">
               <div className="w-full">
-                <p className="text-gray-600 text-sm sm:text-2xl font-semibold my-1 sm:my-2">
-                  Current Balance <p className="text-gray-900">{Balance}-Eth</p>
-                </p>
+                <div className="text-gray-600 text-sm sm:text-2xl font-semibold my-1 sm:my-2">
+                  Current Balance
+                  <div className="text-gray-900 text-lg md:text-2xl">
+                    {Account
+                      ? Balance
+                        ? `${Balance} - Eth`
+                        : "Loading"
+                      : "0 - Eth"}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -192,12 +175,25 @@ const Transfer = () => {
                     <ul class="space-y-2 text-black">
                       {Alltransfers.map((transfer, index) => (
                         <li
-                          className="border-b  pb-2 text-xs sm:text-sm flex justify-between"
+                          className="border-b  pb-2 text-xs sm:text-sm flex justify-between flex-col overflow-x-auto"
                           key={index}
                         >
-                          <span>{transfer.amount}</span>
-                          <span className="text-">{transfer.receiver}</span>
-                          <span>{transfer.transferTime}</span>
+                          <div className="flex justify-between">
+                            <span>{transfer.amount}</span>{" "}
+                            <span>{transfer.transferTime}</span>
+                          </div>
+
+                          <div
+                            className="text justify-between flex"
+                            title={transfer.receiver} // Full address shown on hover
+                          >
+                            <span className="font-semibold">To</span>
+                            {transfer.receiver.slice(
+                              0,
+                              transfer.receiver.length / 2
+                            )}
+                            ...
+                          </div>
                         </li>
                       ))}
                     </ul>

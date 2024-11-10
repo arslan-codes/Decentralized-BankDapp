@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import icon from "../assets/metamask.svg";
+import DbankContext from "./DbankContext";
 
 const Header = () => {
+  const { ConnectWallet, Account } = useContext(DbankContext);
   return (
     <div className="flex justify-center">
       <div
-        className=" w-4/5 md:w-4/5   md: fixed top-2 z-50    m-2  bg-gradient-to-r from-pink-900 bg-opacity-30
-        backdrop-blur-lg flex justify-between  rounded-full"
+        className=" w-3/4 md:w-4/5   fixed top-2 z-50    m-2  bg-gradient-to-r from-pink-900 bg-opacity-30
+        backdrop-blur-lg flex justify-evenly h-12 rounded-full"
       >
         <div className="flex flex-row   lg:flex-row gap-0 sm:gap-0 md:gap-6">
           <RouterLink
@@ -118,11 +121,23 @@ const Header = () => {
         </div>
         <div className="flex flex-row   lg:flex-row gap-0 sm:gap-0 md:gap-6">
           <button
-            smooth={true}
-            duration={500}
-            className="btn btn-ghost  text-white cursor-pointer text-sm lg:text-lg sm:text-base"
+            type="button"
+            className="text-gray-900  font-semibold hover:text-white rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2 cursor-pointer"
+            onClick={ConnectWallet}
           >
-            Connect wallet
+            {Account ? (
+              <div
+                className="text justify-between flex text-white"
+                title={Account} // Full address shown on hover
+              >
+                {Account.slice(0, Account.length / 6)}
+                ...
+              </div>
+            ) : (
+              <img src={icon} alt="icon" className="w-6 h-5 me-2 -ms-1" />
+            )}
+
+            {/* {Account ? <h1>connected</h1> : <h1>Connect with MetaMask</h1>} */}
           </button>
         </div>
       </div>
